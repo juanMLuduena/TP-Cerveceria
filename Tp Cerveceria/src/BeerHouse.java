@@ -1,4 +1,4 @@
-public class BeerHouse extends Thread {
+public class BeerHouse{
 
 
     public static int capacidad;
@@ -35,26 +35,26 @@ public class BeerHouse extends Thread {
         BeerHouse.abierto = abierto;
     }
 
-    public boolean checkEspacio(int i) {
 
-        //devuelve true si esta llena la cerveceria, false si no lo esta
-        if ((stock + i) > capacidad)
-            return true;
-        else {
-            return false;
+
+    public  synchronized  void recibirCerveza(int i) {
+
+        //dudo mucho que esto sea efectivo pero bueno
+        while (((stock + i) > capacidad)) {
+            System.out.println("Cerveceria sin espacio, esperando que alguien compre...");
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-
-    }
-
-    public  void recibirCerveza(int i) {
-
         this.setStock(this.stock + i);
         System.out.println("BeerHouse: Recibi " + i + " cervezas, ahora tengo un stock de: " + this.stock + ".");
 
     }
 
 
-    public  int venderCerveza(int i) {
+    public  synchronized int venderCerveza(int i) {
 
         if (this.stock < i) {
             int vendidas = this.stock;
@@ -63,17 +63,10 @@ public class BeerHouse extends Thread {
             return vendidas;
         } else {
             this.stock = this.stock - i;
+            notifyAll();
             return i;
         }
 
     }
 
-    public void run(){
-        while(this.stock>0){
-        }
-
-        this.abierto = false;
-        System.out.println("Cerro BeerHouse! :'(");
-
-    }
 }

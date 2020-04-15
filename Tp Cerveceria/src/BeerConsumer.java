@@ -1,18 +1,16 @@
 public class BeerConsumer extends Thread {
 
-    int id;
-    String nombre;
-    BeerHouse b;
-    //clase que la birra de beerhouse, puedo hacer un randon para ver cuanto consume en un "dia"
+    private String nombre;
+    private BeerHouse b;
 
-
-    public BeerConsumer(int id, String nombre, BeerHouse b) {
-        this.id = id;
+    //Constructor
+    public BeerConsumer(String nombre, BeerHouse b) {
+        super();
         this.nombre = nombre;
         this.b = b;
     }
 
-
+    //Getters y setters
     public String getNombre() {
         return nombre;
     }
@@ -29,17 +27,16 @@ public class BeerConsumer extends Thread {
         this.b = b;
     }
 
-    public synchronized int consumir() {
+    public int consumir() {
         int consumido = (int) (Math.random() * 15) + 2;
         int compradas=this.b.venderCerveza(consumido);
         if (consumido== compradas) {
-            System.out.println("Consumidor: Compre " + consumido + " cervezas =S");
+            System.out.println("Consumidor "+this.nombre+": Compre " + consumido + " cervezas =S");
         }
         else{
-            System.out.println("Consumidor: Solo pude comprar  " + compradas + " cervezas =(");
+            System.out.println("Consumidor "+this.nombre+": Solo pude comprar  " + compradas + " cervezas =(");
 
         }
-        this.notifyAll();
         return compradas;
     }
 
@@ -47,6 +44,8 @@ public class BeerConsumer extends Thread {
         while (this.b.isAbierto()){
             this.consumir();
         }
+        System.out.println("Consumidor "+this.nombre+": La cerveceria cerro, hora de mimir");
+
     }
 
 
